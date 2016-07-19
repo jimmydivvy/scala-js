@@ -10,15 +10,14 @@
 package org.scalajs.cli
 
 import org.scalajs.core.ir
-import ir.ScalaJSVersions
-import ir.Trees.{Tree, ClassDef}
-import ir.Printers.{InfoPrinter, IRTreePrinter}
-
+import ir.{ScalaJSVersions, TSDPrinter}
+import ir.Trees.{ClassDef, Tree}
+import ir.Printers.{IRTreePrinter, InfoPrinter}
 import org.scalajs.core.tools.io._
-import scala.collection.immutable.Seq
 
+import scala.collection.immutable.Seq
 import java.io.{Console => _, _}
-import java.util.zip.{ZipFile, ZipEntry}
+import java.util.zip.{ZipEntry, ZipFile}
 
 object Scalajsp {
 
@@ -80,7 +79,9 @@ object Scalajsp {
     if (opts.infos)
       new InfoPrinter(stdout).print(vfile.info)
     else
-      new IRTreePrinter(stdout).printTopLevelTree(vfile.tree)
+      new TSDPrinter(stdout).printTopLevelTree(vfile.tree)
+
+      //new IRTreePrinter(stdout).printTopLevelTree(vfile.tree)
 
     stdout.flush()
   }
