@@ -814,6 +814,9 @@ abstract class GenJSCode extends plugins.PluginComponent
         } else {
           val tpeEnteringPosterasure =
             enteringPhase(currentRun.posterasurePhase)(f.tpe)
+
+          println("Entering Post Erasure")
+
           tpeEnteringPosterasure match {
             case tpe: ErasedValueType =>
               /* Here, we must store the field as the boxed representation of
@@ -1318,6 +1321,29 @@ abstract class GenJSCode extends plugins.PluginComponent
                     genStat(rhs))(optimizerHints, None)
               } else {
                 val resultIRType = toIRType(sym.tpe.resultType)
+
+
+//                val tpeEnteringPosterasure =
+//                  enteringPhase(currentRun.erasurePhase)(sym.tpe.resultType)
+
+
+
+//                println("Method: " + methodName.name)
+//                println("JVM Type: " + sym.tpe.resultType)
+//                println("Erase Type: " + tpeEnteringPosterasure)
+//
+//                tpeEnteringPosterasure match {
+//                  case tpe: ErasedValueType => println("Erased: " + tpe.valueClazz)
+//                  case _ => println("Other: " + tpeEnteringPosterasure.getClass)
+//                }
+//
+////                println("IR Type: " + resultIRType)
+//
+//                sym.tpe.resultType match {
+//                  case ErasedValueType(_,_) => println("ERASED")
+//                  case _ => println("NOT ERASED")
+//                }
+
                 genMethodDef(static = sym.owner.isImplClass, methodName,
                     params, resultIRType, rhs, optimizerHints)
               }
@@ -1448,6 +1474,9 @@ abstract class GenJSCode extends plugins.PluginComponent
         tree: Tree, optimizerHints: OptimizerHints): js.MethodDef = {
       implicit val pos = tree.pos
 
+
+      //println("GenMethodDef: " + methodName + " -> " + optimizerHints)
+
       val jsParams = for (param <- paramsSyms) yield {
         implicit val pos = param.pos
         js.ParamDef(encodeLocalSym(param), toIRType(param.tpe),
@@ -1558,14 +1587,16 @@ abstract class GenJSCode extends plugins.PluginComponent
      */
     def genStatOrExpr(tree: Tree, isStat: Boolean): js.Tree = {
       implicit val pos = tree.pos
-
       tree match {
         /** LabelDefs (for while and do..while loops) */
         case lblDf: LabelDef =>
           genLabelDef(lblDf)
 
         /** Local val or var declaration */
-        case ValDef(_, name, _, rhs) =>
+        case ValDef(_, name, tpt, rhs) =>
+
+          println("VAL Type: " + tpt)
+
           /* Must have been eliminated by the tail call transform performed
            * by genMethodBody(). */
           assert(name != nme.THIS,

@@ -22,14 +22,15 @@ import org.scalajs.core.ir.Trees
 class ScalaJSPlugin(val global: Global) extends NscPlugin {
   import global._
 
+  println("LOADED SCALAJS PLUGIN!!")
+
   val name = "scalajs"
   val description = "Compile to JavaScript"
   val components = {
     if (global.forScaladoc) {
       List[NscPluginComponent](PrepInteropComponent)
     } else {
-      List[NscPluginComponent](PreTyperComponentComponent, PrepInteropComponent,
-          GenCodeComponent)
+      List[NscPluginComponent](PreTyperComponentComponent, PrepInteropComponent, GenCodeComponent, GenTSDComponent)
     }
   }
 
@@ -85,9 +86,19 @@ class ScalaJSPlugin(val global: Global) extends NscPlugin {
     override val runsAfter = List("mixin")
     override val runsBefore = List("delambdafy", "cleanup", "terminal")
   } with GenJSCode {
-    def generatedJSAST(clDefs: List[Trees.Tree]): Unit =
+    def generatedJSAST(clDefs: List[Trees.Tree]): Unit = {
       ScalaJSPlugin.this.generatedJSAST(clDefs)
+    }
   }
+
+  object GenTSDComponent extends {
+    val global: ScalaJSPlugin.this.global.type = ScalaJSPlugin.this.global
+    val jsAddons: ScalaJSPlugin.this.jsAddons.type = ScalaJSPlugin.this.jsAddons
+    val scalaJSOpts = ScalaJSPlugin.this.scalaJSOpts
+    override val runsAfter = List("jscode")
+    override val runsBefore = List("delambdafy", "cleanup", "terminal")
+  } with GenTSD
+
 
   override def processOptions(options: List[String],
       error: String => Unit): Unit = {
