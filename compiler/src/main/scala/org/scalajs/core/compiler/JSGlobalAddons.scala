@@ -34,7 +34,7 @@ trait JSGlobalAddons extends JSDefinitions
     import scala.reflect.internal.Flags
 
     /** Symbols of constructors and modules that are to be exported */
-    private val exportedSymbols =
+    val exportedSymbols =
       mutable.Map.empty[Symbol, List[ExportInfo]]
 
     private val exportPrefix = "$js$exported$"

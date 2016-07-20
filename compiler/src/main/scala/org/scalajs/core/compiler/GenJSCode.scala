@@ -1595,7 +1595,7 @@ abstract class GenJSCode extends plugins.PluginComponent
         /** Local val or var declaration */
         case ValDef(_, name, tpt, rhs) =>
 
-          println("VAL Type: " + tpt)
+          //println("VAL Type: " + tpt)
 
           /* Must have been eliminated by the tail call transform performed
            * by genMethodBody(). */

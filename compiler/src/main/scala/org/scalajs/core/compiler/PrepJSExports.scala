@@ -99,6 +99,7 @@ trait PrepJSExports { this: PrepJSInterop =>
   /** Checks and registers module exports on the symbol */
   def registerModuleExports(sym: Symbol): Unit = {
     assert(sym.isModuleClass, "Expected module class")
+
     registerClassOrModuleExportsInternal(sym)
   }
 
@@ -106,10 +107,12 @@ trait PrepJSExports { this: PrepJSInterop =>
   def registerClassExports(sym: Symbol): Unit = {
     assert(!sym.isModuleClass && sym.hasAnnotation(ScalaJSDefinedAnnotation),
         "Expected a Scala.js-defined JS class")
+
     registerClassOrModuleExportsInternal(sym)
   }
 
   private def registerClassOrModuleExportsInternal(sym: Symbol): Unit = {
+
     val isMod = sym.isModuleClass
 
     val exports = exportsOf(sym)
@@ -148,6 +151,8 @@ trait PrepJSExports { this: PrepJSInterop =>
               (if (isMod) "an object" else "a Scala.js-defined JS class"))
         }
 
+
+
         jsInterop.registerForExport(sym, normal)
       }
     }
@@ -164,6 +169,9 @@ trait PrepJSExports { this: PrepJSInterop =>
    *  are used, rather than the annotations of the accessor itself.
    */
   def exportsOf(sym: Symbol): List[ExportInfo] = {
+
+
+
     val exports = directExportsOf(sym) ++ inheritedExportsOf(sym)
 
     // Calculate the distinct exports for this symbol (eliminate double

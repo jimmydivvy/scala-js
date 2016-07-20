@@ -91,13 +91,18 @@ class ScalaJSPlugin(val global: Global) extends NscPlugin {
     }
   }
 
-  object GenTSDComponent extends {
+//  object GenTSDComponent extends {
+//    val global: ScalaJSPlugin.this.global.type = ScalaJSPlugin.this.global
+//    val jsAddons: ScalaJSPlugin.this.jsAddons.type = ScalaJSPlugin.this.jsAddons
+//    val scalaJSOpts = ScalaJSPlugin.this.scalaJSOpts
+//    override val runsAfter = List("jscode")
+//    override val runsBefore = List("delambdafy", "cleanup", "terminal")
+//  } with GenTSD
+
+  object GenTSDComponent extends GenTSD {
     val global: ScalaJSPlugin.this.global.type = ScalaJSPlugin.this.global
     val jsAddons: ScalaJSPlugin.this.jsAddons.type = ScalaJSPlugin.this.jsAddons
-    val scalaJSOpts = ScalaJSPlugin.this.scalaJSOpts
-    override val runsAfter = List("jscode")
-    override val runsBefore = List("delambdafy", "cleanup", "terminal")
-  } with GenTSD
+  }
 
 
   override def processOptions(options: List[String],

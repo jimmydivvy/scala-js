@@ -6,18 +6,23 @@
 package helloworld
 
 import scala.scalajs.js
-import js.annotation.JSName
+import js.annotation.{JSExport, JSExportAll, JSName}
+
+@JSExport @JSExportAll
+class Person(firstName:String){
+  def foo:String = firstName
+  val bar:String = firstName
+
+  @JSName("Woop") def woohoo(x:Int):Option[String] = Some(firstName)
+}
 
 object HelloWorld extends js.JSApp {
 
-  class Person(val firstName:String){
-    def foo:String = firstName
-    val bar:String = firstName
 
-    def woohoo(x:Int):Option[String] = Some(firstName)
-  }
 
   def main(): Unit ={
+    val p = new Person("asdf")
+
 
   }
 

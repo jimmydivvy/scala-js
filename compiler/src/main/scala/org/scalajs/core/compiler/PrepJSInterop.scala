@@ -440,6 +440,7 @@ abstract class PrepJSInterop extends plugins.PluginComponent
         case _            => implDef.symbol
       }
 
+
       lazy val badParent = sym.info.parents find { t =>
         /* We have to allow scala.Dynamic to be able to define js.Dynamic
          * and similar constructs. This causes the unsoundness filed as #1385.
